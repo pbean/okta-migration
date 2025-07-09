@@ -41,14 +41,26 @@ module "policies" {
   }
 }
 
-
-module "user_schema" {
-  source = "./modules/user_schema"
-  providers = {
-    okta.preview    = okta.preview
-    okta.production = okta.production
-  }
-}
+# Only enable and use if needed, not really a practical application for migration but for IaaC
+#module "user_schema" {
+#  source    = "./modules/user_schema"
+#  providers = {
+#    okta.production = okta.production
+#  }
+#  custom_properties = [
+#    {
+#      index       = "customAttribute1"
+#      title       = "Custom Attribute 1"
+#      type        = "string"
+#      description = "This is a custom attribute."
+#      required    = false
+#      permissions = "READ_WRITE"
+#      master      = "OKTA"
+#      enum        = []
+#      unique      = "NOT_UNIQUE"
+#    }
+#  ]
+#}
 
 ## TODO: When possible
 #module "workflows" {

@@ -27,7 +27,7 @@ resource "okta_policy_signon" "imported_signon" {
   provider    = okta.production
   for_each    = data.okta_policy.signon_details
   name        = "oktapreview-${each.value.name}"
-  status      = each.value.status
+  status      = "INACTIVE"
   description = each.value.description
   priority    = each.value.priority
 }
@@ -52,7 +52,7 @@ resource "okta_policy_password" "imported_password" {
   provider                          = okta.production
   for_each                          = data.okta_policy_password.password_details
   name                              = "oktapreview-${each.value.name}"
-  status                            = each.value.status
+  status                            = "INACTIVE"
   description                       = each.value.description
   priority                          = each.value.priority
   password_min_length               = each.value.password_min_length
@@ -89,7 +89,7 @@ resource "okta_policy_mfa" "imported_mfa" {
   provider      = okta.production
   for_each      = data.okta_policy_mfa.mfa_details
   name          = "oktapreview-${each.value.name}"
-  status        = each.value.status
+  status        = "INACTIVE"
   description   = each.value.description
   priority      = each.value.priority
   okta_password = each.value.okta_password

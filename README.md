@@ -78,7 +78,7 @@ module "applications" {
 
 ### Policies
 
-The `policies` module migrates multiple types of policies: **Sign-On**, **Password**, and **MFA**. To ensure migrated policies are easily identifiable and to prevent overwriting existing policies, the name of each migrated policy is automatically prefixed with `oktapreview-`.
+The `policies` module migrates multiple types of policies: **Sign-On**, **Password**, and **MFA**. To ensure migrated policies are easily identifiable and to prevent overwriting existing policies, the name of each migrated policy is automatically prefixed with `oktapreview-`. All policies are created with an **INACTIVE** status. This is a safety measure, as policy assignments to groups cannot be migrated. You will need to manually assign the migrated policies to the correct groups in your production tenant and then activate them.
 
 **To use this module:**
 1.  Uncomment the `module "policies"` block in `main.tf`.
@@ -97,20 +97,33 @@ module "policies" {
 
 ### User Schema
 
-The `user_schema` module migrates custom user profile attributes. It automatically filters out default Okta attributes (like `firstName`, `lastName`, `email`, etc.) and will not overwrite any attributes that already exist in the production tenant.
+The `user_schema` module allows you to define and create custom user schema properties in your production tenant. You can define a list of custom properties in the root `main.tf` file, and the module will create them for you.
 
 **To use this module:**
 1.  Uncomment the `module "user_schema"` block in `main.tf`.
+2.  Define your custom properties in the `custom_properties` variable.
 
 ```terraform
 # main.tf
 
 module "user_schema" {
-  source = "./modules/user_schema"
+  source    = "./modules/user_schema"
   providers = {
-    okta.preview    = okta.preview
     okta.production = okta.production
   }
+  custom_properties = [
+    {
+      index       = "customAttribute1"
+      title       = "Custom Attribute 1"
+      type        = "string"
+      description = "This is a custom attribute."
+      required    = false
+      permissions = "READ_WRITE"
+      master      = "OKTA"
+      enum        = []
+      unique      = "NOT_UNIQUE"
+    }
+  ]
 }
 ```
 
