@@ -9,23 +9,15 @@ terraform {
 
 # --- Sign On Policies ---
 
-# 1. Get list of sign on policies from the preview tenant
-data "okta_policy" "signon_list" {
+data "okta_policy" "signon_source" {
   provider = okta.preview
-  type     = "OKTA_SIGN_ON"
+  for_each = toset(var.signon_policy_names)
+  name     = each.key
 }
 
-# 2. Get full details for each sign on policy
-data "okta_policy" "signon_details" {
-  provider = okta.preview
-  for_each = { for p in data.okta_policy.signon_list.policies : p.id => p }
-  id       = each.value.id
-}
-
-# 3. Create the sign on policies in the production tenant
 resource "okta_policy_signon" "imported_signon" {
   provider    = okta.production
-  for_each    = data.okta_policy.signon_details
+  for_each    = { for k, v in data.okta_policy.signon_source : k => v if v != null }
   name        = "oktapreview-${each.value.name}"
   status      = "INACTIVE"
   description = each.value.description
@@ -34,23 +26,15 @@ resource "okta_policy_signon" "imported_signon" {
 
 # --- Password Policies ---
 
-# 1. Get list of password policies from the preview tenant
-data "okta_policy" "password_list" {
+data "okta_policy" "password_source" {
   provider = okta.preview
-  type     = "PASSWORD"
+  for_each = toset(var.password_policy_names)
+  name     = each.key
 }
 
-# 2. Get full details for each password policy
-data "okta_policy_password" "password_details" {
-  provider  = okta.preview
-  for_each  = { for p in data.okta_policy.password_list.policies : p.id => p }
-  policy_id = each.value.id
-}
-
-# 3. Create the password policies in the production tenant
 resource "okta_policy_password" "imported_password" {
   provider                          = okta.production
-  for_each                          = data.okta_policy_password.password_details
+  for_each                          = { for k, v in data.okta_policy.password_source : k => v if v != null }
   name                              = "oktapreview-${each.value.name}"
   status                            = "INACTIVE"
   description                       = each.value.description
@@ -71,23 +55,15 @@ resource "okta_policy_password" "imported_password" {
 
 # --- MFA Policies ---
 
-# 1. Get list of MFA policies from the preview tenant
-data "okta_policy" "mfa_list" {
+data "okta_policy" "mfa_source" {
   provider = okta.preview
-  type     = "MFA_ENROLLMENT"
+  for_each = toset(var.mfa_policy_names)
+  name     = each.key
 }
 
-# 2. Get full details for each MFA policy
-data "okta_policy_mfa" "mfa_details" {
-  provider  = okta.preview
-  for_each  = { for p in data.okta_policy.mfa_list.policies : p.id => p }
-  policy_id = each.value.id
-}
-
-# 3. Create the MFA policies in the production tenant
 resource "okta_policy_mfa" "imported_mfa" {
   provider      = okta.production
-  for_each      = data.okta_policy_mfa.mfa_details
+  for_each      = { for k, v in data.okta_policy.mfa_source : k => v if v != null }
   name          = "oktapreview-${each.value.name}"
   status        = "INACTIVE"
   description   = each.value.description
