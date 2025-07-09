@@ -49,7 +49,6 @@ Before you begin, ensure you have the following:
     -   `applications/`: Migrates applications.
     -   `policies/`: Migrates Sign-On, Password, and MFA policies.
     -   `user_schema/`: Migrates custom user schema properties.
-    -   `app_signon_policy/`: Migrates application-specific sign-on policies.
     -   `workflows/`, `profile_sources/`, `configurations/`: Placeholders for migrating other resources.
 
 ## Modules Usage
@@ -100,32 +99,11 @@ module "policies" {
 }
 ```
 
-### Application Sign-On Policies
-
-The `app_signon_policy` module migrates the sign-on policy for specific applications. It reads the policy from a source application and creates a new, dedicated policy for the corresponding application in the production tenant. The new policy will be prefixed with `oktapreview-`.
-
-**To use this module:**
-1.  Uncomment the `module "app_signon_policy"` block in `main.tf`.
-2.  Provide a list of the application labels for which you want to migrate policies.
-
-```terraform
-# main.tf
-
-module "app_signon_policy" {
-  source    = "./modules/app_signon_policy"
-  providers = {
-    okta.preview    = okta.preview
-    okta.production = okta.production
-  }
-  app_labels = ["My App 1", "My App 2"]
-}
-```
-```
-
 #### Unsupported Policy Types
 
 The following policy types cannot be migrated with this tool due to limitations in the Okta Terraform provider:
 
+-   **Application-Specific Sign-On Policies**
 -   **Device Assurance Policies**
 -   **IDP Discovery Policies**
 -   **Profile Enrollment Policies**

@@ -44,14 +44,7 @@ module "policies" {
   mfa_policy_names              = ["Default Policy"]
 }
 
-module "app_signon_policy" {
-  source    = "./modules/app_signon_policy"
-  providers = {
-    okta.preview    = okta.preview
-    okta.production = okta.production
-  }
-  app_labels = ["My App 1", "My App 2"]
-}
+
 
 # Only enable and use if needed, not really a practical application for migration but for IaaC
 #module "user_schema" {

@@ -25,7 +25,6 @@ data "okta_app" "existing_apps" {
   provider = okta.production
   for_each = local.apps_to_migrate
   label    = each.value.label
-  skip_groups = true
 }
 
 # Create the applications in the production tenant if they don't already exist
