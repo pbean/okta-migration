@@ -16,9 +16,5 @@ variable "mfa_policy_names" {
   default     = []
 }
 
-variable "authentication_policy_names" {
-  description = "A list of Authentication Policy names to migrate."
-  type        = list(string)
-  default     = []
-}
+
 
