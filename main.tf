@@ -1,23 +1,24 @@
 terraform {
   required_providers {
     okta = {
-      source  = "oktadeveloper/okta"
-      version = "~> 4.10"
+      source  = "okta/okta"
+      version = "~> 5.1.0"
     }
   }
 }
 
 provider "okta" {
+  alias     = "preview"
   org_name  = var.okta_org_name_preview
   base_url  = var.okta_base_url_preview
   api_token = var.okta_api_token_preview
 }
 
 provider "okta" {
+  alias     = "production"
   org_name  = var.okta_org_name_production
   base_url  = var.okta_base_url_production
   api_token = var.okta_api_token_production
-  alias     = "production"
 }
 
 # To migrate resources, uncomment the module blocks below.
@@ -40,17 +41,6 @@ module "policies" {
   }
 }
 
-module "workflows" {
-  source = "./modules/workflows"
-}
-
-module "profile_sources" {
-  source = "./modules/profile_sources"
-}
-
-# module "configurations" {
-#   source = "./modules/configurations"
-# }
 
 module "profile_mappings" {
   source = "./modules/profile_mappings"
@@ -59,3 +49,17 @@ module "profile_mappings" {
     okta.production = okta.production
   }
 }
+
+
+## TODO: When possible
+#module "workflows" {
+#  source = "./modules/workflows"
+#}
+
+#module "profile_sources" {
+#  source = "./modules/profile_sources"
+#}
+
+# module "configurations" {
+#   source = "./modules/configurations"
+# }
