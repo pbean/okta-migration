@@ -27,7 +27,7 @@ provider "okta" {
 module "applications" {
   source       = "./modules/applications"
   providers = {
-    okta.preview = okta
+    okta.preview    = okta.preview
     okta.production = okta.production
   }
   exclude_apps = ["Okta Browser Plugin", "Okta Dashboard"]
@@ -36,31 +36,28 @@ module "applications" {
 module "policies" {
   source = "./modules/policies"
   providers = {
-    okta.preview = okta
+    okta.preview    = okta.preview
     okta.production = okta.production
   }
 }
 
 
-
-
+module "user_schema" {
+  source = "./modules/user_schema"
+  providers = {
+    okta.preview    = okta.preview
+    okta.production = okta.production
+  }
+}
 
 ## TODO: When possible
 #module "workflows" {
 #  source = "./modules/workflows"
 #}
 
-module "profile_sources" {
-  source = "./modules/profile_sources"
-}
-
-module "user_schema" {
-  source = "./modules/user_schema"
-  providers = {
-    okta.preview = okta
-    okta.production = okta.production
-  }
-}
+#module "profile_sources" {
+#  source = "./modules/profile_sources"
+#}
 
 # module "configurations" {
 #   source = "./modules/configurations"
