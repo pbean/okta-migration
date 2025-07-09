@@ -9,7 +9,7 @@ terraform {
 
 # Read all policies from the preview tenant
 
-data "okta_policy" "all_policies" {
+data "okta_policies" "all_policies" {
   provider = okta.preview
   type     = "OKTA_SIGN_ON"
 }

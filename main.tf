@@ -42,13 +42,7 @@ module "policies" {
 }
 
 
-module "profile_mappings" {
-  source = "./modules/profile_mappings"
-  providers = {
-    okta.preview = okta
-    okta.production = okta.production
-  }
-}
+
 
 
 ## TODO: When possible
@@ -56,9 +50,17 @@ module "profile_mappings" {
 #  source = "./modules/workflows"
 #}
 
-#module "profile_sources" {
-#  source = "./modules/profile_sources"
-#}
+module "profile_sources" {
+  source = "./modules/profile_sources"
+}
+
+module "user_schema" {
+  source = "./modules/user_schema"
+  providers = {
+    okta.preview = okta
+    okta.production = okta.production
+  }
+}
 
 # module "configurations" {
 #   source = "./modules/configurations"

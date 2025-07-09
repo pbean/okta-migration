@@ -42,7 +42,7 @@ The project is organized into the following files and directories:
     -   `policies/`: Migrates policies.
     -   `workflows/`: A placeholder for migrating workflows.
     -   `profile_sources/`: Migrates user profile mapping sources.
-    -   `profile_mappings/`: Migrates user profile attribute schemas.
+    -   `user_schema/`: Migrates custom user schema properties.
     -   `configurations/`: A placeholder for migrating configurations.
 
 ## Usage
@@ -87,19 +87,7 @@ module "policies" {
 
 ### Profile Mappings
 
-The `profile_mappings` module migrates user profile attribute schemas.
-
-**To use this module:**
-
-1.  Uncomment the `module "profile_mappings"` block in `main.tf`.
-
-```terraform
-# main.tf
-
-module "profile_mappings" {
-  source = "./modules/profile_mappings"
-}
-```
+The `profile_mappings` module has been removed due to limitations in the Okta Terraform provider. The provider does not currently support a data source to list all profile mappings, which makes automatic migration of them impossible.
 
 ### Plan and Apply
 
