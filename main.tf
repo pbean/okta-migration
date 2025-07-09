@@ -39,9 +39,10 @@ module "policies" {
     okta.preview    = okta.preview
     okta.production = okta.production
   }
-  signon_policy_names   = ["Default Policy"]
-  password_policy_names = ["Default Policy"]
-  mfa_policy_names      = ["Default Policy"]
+  signon_policy_names           = ["Default Policy"]
+  password_policy_names         = ["Default Policy"]
+  mfa_policy_names              = ["Default Policy"]
+  authentication_policy_names   = []
 }
 
 # Only enable and use if needed, not really a practical application for migration but for IaaC

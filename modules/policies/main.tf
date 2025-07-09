@@ -84,3 +84,22 @@ resource "okta_policy_mfa" "imported_mfa" {
   yubikey_token = each.value.yubikey_token
   external_idp  = each.value.external_idp
 }
+
+# --- Authentication Policies ---
+
+data "okta_policy" "authentication_source" {
+  provider = okta.preview
+  for_each = toset(var.authentication_policy_names)
+  name     = each.key
+}
+
+resource "okta_policy_authentication" "imported_authentication" {
+  provider    = okta.production
+  for_each    = { for k, v in data.okta_policy.authentication_source : k => v if v != null }
+  name        = "oktapreview-${each.value.name}"
+  status      = "INACTIVE"
+  description = each.value.description
+  priority    = each.value.priority
+}
+
+

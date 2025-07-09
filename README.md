@@ -78,7 +78,7 @@ module "applications" {
 
 ### Policies
 
-The `policies` module migrates multiple types of policies: **Sign-On**, **Password**, and **MFA**. Due to limitations in the Okta provider, you must explicitly list the names of the policies you wish to migrate for each type. To ensure migrated policies are easily identifiable and to prevent overwriting existing policies, the name of each migrated policy is automatically prefixed with `oktapreview-`. All policies are created with an **INACTIVE** status. This is a safety measure, as policy assignments to groups cannot be migrated. You will need to manually assign the migrated policies to the correct groups in your production tenant and then activate them.
+The `policies` module migrates multiple types of policies: **Sign-On**, **Password**, **MFA**, and **Authentication**. Due to limitations in the Okta provider, you must explicitly list the names of the policies you wish to migrate for each type. To ensure migrated policies are easily identifiable and to prevent overwriting existing policies, the name of each migrated policy is automatically prefixed with `oktapreview-`. All policies are created with an **INACTIVE** status. This is a safety measure, as policy assignments to groups cannot be migrated. You will need to manually assign the migrated policies to the correct groups in your production tenant and then activate them.
 
 **To use this module:**
 1.  Uncomment the `module "policies"` block in `main.tf`.
@@ -93,11 +93,23 @@ module "policies" {
     okta.preview    = okta.preview
     okta.production = okta.production
   }
-  signon_policy_names   = ["Default Policy", "My Custom Sign-On Policy"]
-  password_policy_names = ["Default Policy"]
-  mfa_policy_names      = ["Default Policy"]
+  signon_policy_names           = ["Default Policy", "My Custom Sign-On Policy"]
+  password_policy_names         = ["Default Policy"]
+  mfa_policy_names              = ["Default Policy"]
+  authentication_policy_names   = ["My Authentication Policy"]
 }
 ```
+
+#### Unsupported Policy Types
+
+The following policy types cannot be migrated with this tool due to limitations in the Okta Terraform provider:
+
+-   **Device Assurance Policies**
+-   **IDP Discovery Policies**
+-   **Profile Enrollment Policies**
+-   **Global Session Policy**
+
+These policies must be configured manually in your production tenant.
 
 ### User Schema
 
