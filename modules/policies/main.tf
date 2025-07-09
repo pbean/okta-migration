@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    okta = {
-      source                = "okta/okta"
-      configuration_aliases = [okta.preview, okta.production]
-    }
-  }
-}
-
 # --- Sign On Policies ---
 
 data "okta_policy_signon" "signon_source" {
