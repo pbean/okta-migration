@@ -9,38 +9,34 @@ terraform {
 
 # --- Sign On Policies ---
 
-data "okta_policy" "signon_source" {
+data "okta_policy_signon" "signon_source" {
   provider = okta.preview
   for_each = toset(var.signon_policy_names)
   name     = each.key
-  type     = "OKTA_SIGN_ON"
 }
 
 resource "okta_policy_signon" "imported_signon" {
   provider    = okta.production
-  for_each    = { for k, v in data.okta_policy.signon_source : k => v if v != null }
+  for_each    = { for k, v in data.okta_policy_signon.signon_source : k => v if v != null }
   name        = "oktapreview-${each.value.name}"
   status      = "INACTIVE"
   description = each.value.description
-  priority    = each.value.priority
 }
 
 # --- Password Policies ---
 
-data "okta_policy" "password_source" {
+data "okta_policy_password" "password_source" {
   provider = okta.preview
   for_each = toset(var.password_policy_names)
   name     = each.key
-  type     = "PASSWORD"
 }
 
 resource "okta_policy_password" "imported_password" {
   provider                          = okta.production
-  for_each                          = { for k, v in data.okta_policy.password_source : k => v if v != null }
+  for_each                          = { for k, v in data.okta_policy_password.password_source : k => v if v != null }
   name                              = "oktapreview-${each.value.name}"
   status                            = "INACTIVE"
   description                       = each.value.description
-  priority                          = each.value.priority
   password_min_length               = each.value.password_min_length
   password_min_lowercase            = each.value.password_min_lowercase
   password_min_number               = each.value.password_min_number
@@ -57,20 +53,18 @@ resource "okta_policy_password" "imported_password" {
 
 # --- MFA Policies ---
 
-data "okta_policy" "mfa_source" {
+data "okta_policy_mfa" "mfa_source" {
   provider = okta.preview
   for_each = toset(var.mfa_policy_names)
   name     = each.key
-  type     = "MFA_ENROLLMENT"
 }
 
 resource "okta_policy_mfa" "imported_mfa" {
   provider      = okta.production
-  for_each      = { for k, v in data.okta_policy.mfa_source : k => v if v != null }
+  for_each      = { for k, v in data.okta_policy_mfa.mfa_source : k => v if v != null }
   name          = "oktapreview-${each.value.name}"
   status        = "INACTIVE"
   description   = each.value.description
-  priority      = each.value.priority
   okta_password = each.value.okta_password
   okta_otp      = each.value.okta_otp
   okta_question = each.value.okta_question
@@ -87,7 +81,3 @@ resource "okta_policy_mfa" "imported_mfa" {
   yubikey_token = each.value.yubikey_token
   external_idp  = each.value.external_idp
 }
-
-
-
-
