@@ -42,43 +42,71 @@ The project is organized into the following files and directories:
     -   `policies/`: Migrates policies.
     -   `workflows/`: A placeholder for migrating workflows.
     -   `profile_sources/`: Migrates user profile mapping sources.
+    -   `profile_mappings/`: Migrates user profile attribute schemas.
     -   `configurations/`: A placeholder for migrating configurations.
 
 ## Usage
 
-This project uses a modular approach to migrate Okta resources. Each resource type has its own module, which you can enable or disable as needed.
+This project uses a modular approach to migrate Okta resources. Each resource type has its own module. To use a module, you must uncomment it in the `main.tf` file.
 
-1.  **Enable Modules:**
+### Applications
 
-    To migrate a specific type of resource, uncomment the corresponding module block in the `main.tf` file. For example, to migrate applications, uncomment the following lines:
+The `applications` module migrates applications from the preview tenant to the production tenant.
 
-    ```terraform
-    module "applications" {
-      source = "./modules/applications"
-    }
-    ```
+To prevent the migration of default applications (e.g., "Okta Browser Plugin", "Okta Dashboard") or other applications that already exist in your production tenant, you can specify a list of application labels to exclude.
 
-2.  **Excluding Default Applications:**
+**To use this module:**
 
-    To prevent the migration of default or existing applications, you can specify a list of application labels to exclude. In the `main.tf` file, add the `exclude_apps` variable to the `module "applications"` block:
+1.  Uncomment the `module "applications"` block in `main.tf`.
+2.  (Optional) Add the `exclude_apps` variable with a list of application labels to exclude.
 
-    ```terraform
-    module "applications" {
-      source       = "./modules/applications"
-      exclude_apps = ["Okta Browser Plugin", "Okta Dashboard"]
-    }
-    ```
+```terraform
+# main.tf
 
-3.  **Policy Migration:**
+module "applications" {
+  source       = "./modules/applications"
+  exclude_apps = ["Okta Browser Plugin", "Okta Dashboard"]
+}
+```
 
-    When migrating policies, each policy name will be prefixed with "oktapreview-" to ensure they are easily identifiable in the production tenant and to avoid overwriting existing policies.
+### Policies
 
-4.  **Plan and Apply:**
+The `policies` module migrates Okta Sign-On policies. To ensure migrated policies are easily identifiable and to prevent overwriting existing policies in your production tenant, the name of each migrated policy is automatically prefixed with `oktapreview-`.
 
-    Once you have enabled the modules for the resources you want to migrate, run the following commands:
+**To use this module:**
 
-    -   `terraform plan`: This command shows you what changes Terraform will make to your Okta tenants.
-    -   `terraform apply`: This command applies the changes and migrates the resources.
+1.  Uncomment the `module "policies"` block in `main.tf`.
+
+```terraform
+# main.tf
+
+module "policies" {
+  source = "./modules/policies"
+}
+```
+
+### Profile Mappings
+
+The `profile_mappings` module migrates user profile attribute schemas.
+
+**To use this module:**
+
+1.  Uncomment the `module "profile_mappings"` block in `main.tf`.
+
+```terraform
+# main.tf
+
+module "profile_mappings" {
+  source = "./modules/profile_mappings"
+}
+```
+
+### Plan and Apply
+
+Once you have enabled the modules for the resources you want to migrate, run the following commands:
+
+-   `terraform plan`: This command shows you what changes Terraform will make to your Okta tenants.
+-   `terraform apply`: This command applies the changes and migrates the resources.
 
 ## Customization
 

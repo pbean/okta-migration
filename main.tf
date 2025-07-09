@@ -45,3 +45,7 @@ module "policies" {
 # module "configurations" {
 #   source = "./modules/configurations"
 # }
+
+module "profile_mappings" {
+  source = "./modules/profile_mappings"
+}
