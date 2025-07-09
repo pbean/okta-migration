@@ -34,6 +34,5 @@ resource "okta_app_auto_login" "imported_apps" {
   provider     = okta.production
   for_each     = { for k, v in local.apps_to_migrate : k => v if data.okta_app.existing_apps[k].id == null }
   label        = each.value.label
-  sign_on_mode = each.value.sign_on_mode
   status       = each.value.status
 }
