@@ -13,6 +13,7 @@ data "okta_policy" "signon_source" {
   provider = okta.preview
   for_each = toset(var.signon_policy_names)
   name     = each.key
+  type     = "OKTA_SIGN_ON"
 }
 
 resource "okta_policy_signon" "imported_signon" {
@@ -30,6 +31,7 @@ data "okta_policy" "password_source" {
   provider = okta.preview
   for_each = toset(var.password_policy_names)
   name     = each.key
+  type     = "PASSWORD"
 }
 
 resource "okta_policy_password" "imported_password" {
@@ -59,6 +61,7 @@ data "okta_policy" "mfa_source" {
   provider = okta.preview
   for_each = toset(var.mfa_policy_names)
   name     = each.key
+  type     = "MFA_ENROLLMENT"
 }
 
 resource "okta_policy_mfa" "imported_mfa" {
@@ -91,6 +94,7 @@ data "okta_policy" "authentication_source" {
   provider = okta.preview
   for_each = toset(var.authentication_policy_names)
   name     = each.key
+  type     = "AUTHENTICATION"
 }
 
 resource "okta_policy_authentication" "imported_authentication" {

@@ -25,7 +25,6 @@ data "okta_app" "existing_apps" {
   provider = okta.production
   for_each = local.apps_to_migrate
   label    = each.value.label
-  skip_users = true
   skip_groups = true
 }
 
