@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    okta = {
+      source = "oktadeveloper/okta"
+      configuration_aliases = [ okta.preview, okta.production ]
+    }
+  }
+}
 
 # Get the user profile mapping source from the preview tenant
 data "okta_profile_mapping_source" "source" {

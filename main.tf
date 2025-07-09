@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     okta = {
-      source  = "okta/okta"
+      source  = "oktadeveloper/okta"
       version = "~> 4.10"
     }
   }
@@ -11,7 +11,6 @@ provider "okta" {
   org_name  = var.okta_org_name_preview
   base_url  = var.okta_base_url_preview
   api_token = var.okta_api_token_preview
-  alias     = "preview"
 }
 
 provider "okta" {
@@ -26,21 +25,28 @@ provider "okta" {
 
 module "applications" {
   source       = "./modules/applications"
+  providers = {
+    okta.preview = okta
+    okta.production = okta.production
+  }
   exclude_apps = ["Okta Browser Plugin", "Okta Dashboard"]
 }
 
-
 module "policies" {
   source = "./modules/policies"
+  providers = {
+    okta.preview = okta
+    okta.production = okta.production
+  }
 }
 
-# module "workflows" {
-#   source = "./modules/workflows"
-# }
+module "workflows" {
+  source = "./modules/workflows"
+}
 
-# module "profile_sources" {
-#   source = "./modules/profile_sources"
-# }
+module "profile_sources" {
+  source = "./modules/profile_sources"
+}
 
 # module "configurations" {
 #   source = "./modules/configurations"
@@ -48,4 +54,8 @@ module "policies" {
 
 module "profile_mappings" {
   source = "./modules/profile_mappings"
+  providers = {
+    okta.preview = okta
+    okta.production = okta.production
+  }
 }

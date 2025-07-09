@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    okta = {
+      source = "oktadeveloper/okta"
+      configuration_aliases = [ okta.preview, okta.production ]
+    }
+  }
+}
 
 # Read all applications from the preview tenant
 data "okta_apps" "all_apps" {

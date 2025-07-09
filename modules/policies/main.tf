@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    okta = {
+      source = "oktadeveloper/okta"
+      configuration_aliases = [ okta.preview, okta.production ]
+    }
+  }
+}
 
 # Read all policies from the preview tenant
 
