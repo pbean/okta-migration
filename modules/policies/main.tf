@@ -10,7 +10,7 @@ terraform {
 # --- Sign On Policies ---
 
 # 1. Get list of sign on policies from the preview tenant
-data "okta_policies" "signon_list" {
+data "okta_policy" "signon_list" {
   provider = okta.preview
   type     = "OKTA_SIGN_ON"
 }
@@ -18,7 +18,7 @@ data "okta_policies" "signon_list" {
 # 2. Get full details for each sign on policy
 data "okta_policy" "signon_details" {
   provider = okta.preview
-  for_each = { for p in data.okta_policies.signon_list.policies : p.id => p }
+  for_each = { for p in data.okta_policy.signon_list.policies : p.id => p }
   id       = each.value.id
 }
 
@@ -35,7 +35,7 @@ resource "okta_policy_signon" "imported_signon" {
 # --- Password Policies ---
 
 # 1. Get list of password policies from the preview tenant
-data "okta_policies" "password_list" {
+data "okta_policy" "password_list" {
   provider = okta.preview
   type     = "PASSWORD"
 }
@@ -43,7 +43,7 @@ data "okta_policies" "password_list" {
 # 2. Get full details for each password policy
 data "okta_policy_password" "password_details" {
   provider  = okta.preview
-  for_each  = { for p in data.okta_policies.password_list.policies : p.id => p }
+  for_each  = { for p in data.okta_policy.password_list.policies : p.id => p }
   policy_id = each.value.id
 }
 
@@ -72,7 +72,7 @@ resource "okta_policy_password" "imported_password" {
 # --- MFA Policies ---
 
 # 1. Get list of MFA policies from the preview tenant
-data "okta_policies" "mfa_list" {
+data "okta_policy" "mfa_list" {
   provider = okta.preview
   type     = "MFA_ENROLLMENT"
 }
@@ -80,7 +80,7 @@ data "okta_policies" "mfa_list" {
 # 2. Get full details for each MFA policy
 data "okta_policy_mfa" "mfa_details" {
   provider  = okta.preview
-  for_each  = { for p in data.okta_policies.mfa_list.policies : p.id => p }
+  for_each  = { for p in data.okta_policy.mfa_list.policies : p.id => p }
   policy_id = each.value.id
 }
 
