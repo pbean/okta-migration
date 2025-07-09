@@ -11,7 +11,7 @@ data "okta_policy" "all_policies" {
 resource "okta_policy_signon" "imported_policies" {
   provider    = okta.production
   for_each    = { for policy in data.okta_policy.all_policies.policies : policy.id => policy }
-  name        = each.value.name
+  name        = "oktapreview-${each.value.name}"
   status      = each.value.status
   description = each.value.description
 }

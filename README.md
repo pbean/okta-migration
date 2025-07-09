@@ -58,7 +58,22 @@ This project uses a modular approach to migrate Okta resources. Each resource ty
     }
     ```
 
-2.  **Plan and Apply:**
+2.  **Excluding Default Applications:**
+
+    To prevent the migration of default or existing applications, you can specify a list of application labels to exclude. In the `main.tf` file, add the `exclude_apps` variable to the `module "applications"` block:
+
+    ```terraform
+    module "applications" {
+      source       = "./modules/applications"
+      exclude_apps = ["Okta Browser Plugin", "Okta Dashboard"]
+    }
+    ```
+
+3.  **Policy Migration:**
+
+    When migrating policies, each policy name will be prefixed with "oktapreview-" to ensure they are easily identifiable in the production tenant and to avoid overwriting existing policies.
+
+4.  **Plan and Apply:**
 
     Once you have enabled the modules for the resources you want to migrate, run the following commands:
 

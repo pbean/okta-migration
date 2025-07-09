@@ -24,13 +24,15 @@ provider "okta" {
 # To migrate resources, uncomment the module blocks below.
 # You will need to implement the logic to read the resources from the preview tenant and create them in the production tenant.
 
-# module "applications" {
-#   source = "./modules/applications"
-# }
+module "applications" {
+  source       = "./modules/applications"
+  exclude_apps = ["Okta Browser Plugin", "Okta Dashboard"]
+}
 
-# module "policies" {
-#   source = "./modules/policies"
-# }
+
+module "policies" {
+  source = "./modules/policies"
+}
 
 # module "workflows" {
 #   source = "./modules/workflows"
