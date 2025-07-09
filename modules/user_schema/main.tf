@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    okta = {
+      source                = "okta/okta"
+      configuration_aliases = [okta.production]
+    }
+  }
+}
+
 resource "okta_user_schema_property" "custom_properties" {
   provider    = okta.production
   for_each    = { for prop in var.custom_properties : prop.index => prop }
