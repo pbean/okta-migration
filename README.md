@@ -78,11 +78,13 @@ module "applications" {
 
 ### Policies
 
-The `policies` module migrates multiple types of policies: **Sign-On**, **Password**, and **MFA**. Due to limitations in the Okta provider, you must explicitly list the names of the policies you wish to migrate for each type. To ensure migrated policies are easily identifiable and to prevent overwriting existing policies, the name of each migrated policy is automatically prefixed with `oktapreview-`. All policies are created with an **INACTIVE** status. This is a safety measure, as policy assignments to groups cannot be migrated. You will need to manually assign the migrated policies to the correct groups in your production tenant and then activate them.
+The `policies` module allows you to create new **Sign-On**, **Password**, and **MFA** policies in your production tenant. Due to limitations in the Okta Terraform provider, policies cannot be automatically read and migrated from the preview tenant. Instead, you must explicitly define the complete configuration for each policy you wish to create.
+
+To ensure migrated policies are easily identifiable, the name of each new policy is automatically prefixed with `oktapreview-`. All policies are created with an **INACTIVE** status. This is a safety measure, as policy assignments are not handled by this module. You will need to manually assign the new policies to the correct groups in your production tenant and then activate them.
 
 **To use this module:**
 1.  Uncomment the `module "policies"` block in `main.tf`.
-2.  Provide lists of the exact names of the policies you want to migrate.
+2.  Define the policies you want to create using the `signon_policies`, `password_policies`, and `mfa_policies` variables. See the example below for the required structure.
 
 ```terraform
 # main.tf
@@ -90,12 +92,41 @@ The `policies` module migrates multiple types of policies: **Sign-On**, **Passwo
 module "policies" {
   source = "./modules/policies"
   providers = {
-    okta.preview    = okta.preview
     okta.production = okta.production
   }
-  signon_policy_names           = ["Default Policy", "My Custom Sign-On Policy"]
-  password_policy_names         = ["Default Policy"]
-  mfa_policy_names      = ["Default Policy"]
+
+  signon_policies = {
+    "My Custom Sign-On Policy" = {
+      description     = "A custom sign-on policy."
+      groups_included = ["group_id_1", "group_id_2"]
+    }
+  }
+
+  password_policies = {
+    "My Custom Password Policy" = {
+      description                       = "A custom password policy."
+      priority                          = 1
+      password_min_length               = 8
+      password_min_lowercase            = 1
+      password_min_number               = 1
+      password_min_symbol               = 1
+      password_min_uppercase            = 1
+      password_max_age_days             = 90
+      password_expire_warn_days         = 15
+      password_history_count            = 4
+      password_max_lockout_attempts     = 10
+      password_auto_unlock_minutes      = 10
+      password_show_lockout_failures    = true
+      password_lockout_notification_channels = ["EMAIL"]
+    }
+  }
+
+  mfa_policies = {
+    "My Custom MFA Policy" = {
+      description    = "A custom MFA policy."
+      authenticators = ["okta_password", "google_otp"]
+    }
+  }
 }
 ```
 
