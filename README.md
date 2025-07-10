@@ -1,3 +1,5 @@
+# **NOTE** This project was a dead-end, despite forum posts and other docs alluding to this being possible terraform can only be used to implement not migrate so it's only IaaC I've left it up for reference I guess but it's not viable right now.
+
 # Okta Tenant Migration with Terraform
 
 This project uses Terraform to migrate Okta resources from a preview tenant to a production tenant. It is designed to be modular, allowing you to select which resources you want to migrate.
